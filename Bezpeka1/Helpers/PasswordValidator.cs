@@ -6,7 +6,8 @@
         {
             return password.Length >= 8 &&
                    password.Any(char.IsUpper) &&
-                   password.Any(char.IsDigit);
+                   password.Any(char.IsDigit) &&
+                   password.Any(c => "+-*/=%&|^~".Contains(c));
         }
     }
 }

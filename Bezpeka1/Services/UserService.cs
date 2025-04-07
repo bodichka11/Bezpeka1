@@ -103,8 +103,13 @@ namespace Bezpeka1.Services
                 return false;
             }
 
-            if (string.IsNullOrEmpty(newPassword))
+            if (string.IsNullOrEmpty(newPassword)) return false;
+
+            if (!PasswordValidator.Validate(newPassword))
+            {
+                Console.WriteLine("New password must be at least 8 characters long, contain uppercase letters, digits, and arithmetic symbols.");
                 return false;
+            }
 
             user.PasswordHash = _passwordHasher.Hash(newPassword);
             _context.SaveChanges();
