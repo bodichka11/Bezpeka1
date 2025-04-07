@@ -22,5 +22,17 @@ namespace Bezpeka1.Services.Interfaces
         bool ChangePassword(int userId, string oldPassword, string newPassword);
 
         bool TogglePasswordRestrictions(int userId);
+
+        bool RegisterUser(string username, string password, Role role = Role.User);
+
+        bool ResetPassword(int userId, string newPassword);
+
+        List<OperationLog> GetAllOperationLogs();
+
+        List<LoginLogoutLog> GetAllLoginLogoutLogs();
+
+        void LogLoginLogout(string userId, string action, string userRole);
+
+        void LogOperation(string userId, string action);
     }
 }

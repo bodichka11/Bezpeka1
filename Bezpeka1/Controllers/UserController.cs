@@ -33,5 +33,21 @@ namespace Bezpeka1.Controllers
                 user.PasswordRestrictionsEnabled
             });
         }
+
+        [HttpGet("last-login")]
+        [Authorize(Roles ="Manager,Moderator")]
+        public IActionResult GetLastLogin()
+        {
+            var username = User.Identity?.Name;
+            var user = _userService.GetUserByUsername(username);
+
+            if (user == null) return NotFound();
+
+            return Ok(new
+            {
+                user.Username,
+                LastLogin = user.LastLogin
+            });
+        }
     }
 }

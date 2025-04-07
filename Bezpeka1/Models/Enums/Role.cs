@@ -4,5 +4,7 @@
     {
         Admin,
         User,
+        Manager,
+        Moderator,
     }
 }

@@ -15,5 +15,7 @@ namespace Bezpeka1.Models
         public bool IsBlocked { get; set; }
 
         public bool PasswordRestrictionsEnabled { get; set; }
+
+        public DateTime? LastLogin { get; set; }
     }
 }

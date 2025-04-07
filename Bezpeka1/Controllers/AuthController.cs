@@ -1,5 +1,4 @@
 ﻿using Bezpeka1.Models;
-using Bezpeka1.Services;
 using Bezpeka1.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,8 +24,17 @@ namespace Bezpeka1.Controllers
             var user = _userService.ValidateUser(request.Username, request.Password);
             if (user == null) return Unauthorized("Invalid username or password");
 
+            _userService.LogLoginLogout(user.Id.ToString(), "Login", user.Role.ToString());
+
             var token = _authService.GenerateJwtToken(user);
             return Ok(new { Token = token });
+        }
+
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] Models.RegisterRequest request)
+        {
+            var success = _userService.RegisterUser(request.Username, request.Password, request.Role);
+            return success ? Ok() : BadRequest("Registration failed");
         }
 
         [HttpPost("change-password")]
@@ -39,7 +47,14 @@ namespace Bezpeka1.Controllers
             if (user == null) return NotFound("User not found");
 
             var success = _userService.ChangePassword(user.Id, request.OldPassword, request.NewPassword);
-            return success ? Ok() : BadRequest("Invalid password or restrictions not met");
+            if (success)
+            {
+                // Логування дії
+                _userService.LogOperation(user.Id.ToString(), "Change Password");
+                return Ok();
+            }
+
+            return BadRequest("Invalid password or restrictions not met");
         }
     }
 }

@@ -125,5 +125,85 @@ namespace Bezpeka1.Services
             _context.SaveChanges();
             return true;
         }
+
+
+        public void LogLoginLogout(string userId, string action, string userRole)
+        {
+            var logEntry = new LoginLogoutLog
+            {
+                UserId = userId,
+                Action = action,
+                Timestamp = DateTime.UtcNow,
+                UserRole = userRole
+            };
+
+            _context.LoginLogoutLogs.Add(logEntry);
+            _context.SaveChanges();
+        }
+
+        public void LogOperation(string userId, string action)
+        {
+            var logEntry = new OperationLog
+            {
+                UserId = userId,
+                Action = action,
+                Timestamp = DateTime.UtcNow
+            };
+
+            _context.OperationLogs.Add(logEntry);
+            _context.SaveChanges();
+        }
+
+        public bool RegisterUser(string username, string password, Role role = Role.User)
+        {
+            if (_context.Users.Any(u => u.Username == username))
+                return false;
+
+            if (!PasswordValidator.Validate(password))
+            {
+                Console.WriteLine("Password does not meet the requirements.");
+                return false;
+            }
+
+            var newUser = new User
+            {
+                Username = username,
+                PasswordHash = _passwordHasher.Hash(password),
+                Role = role,
+                IsBlocked = false,
+                PasswordRestrictionsEnabled = true,
+                LastLogin = null
+            };
+
+            _context.Users.Add(newUser);
+            _context.SaveChanges();
+            return true;
+        }
+
+        public List<LoginLogoutLog> GetAllLoginLogoutLogs()
+        {
+            return _context.LoginLogoutLogs.ToList();
+        }
+
+        public List<OperationLog> GetAllOperationLogs()
+        {
+            return _context.OperationLogs.ToList();
+        }
+
+        public bool ResetPassword(int userId, string newPassword)
+        {
+            var user = _context.Users.Find(userId);
+            if (user == null) return false;
+
+            if (!PasswordValidator.Validate(newPassword))
+            {
+                Console.WriteLine("New password does not meet the requirements.");
+                return false;
+            }
+
+            user.PasswordHash = _passwordHasher.Hash(newPassword);
+            _context.SaveChanges();
+            return true;
+        }
     }
 }
