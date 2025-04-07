@@ -4,6 +4,7 @@ obj/
 
 # VS Code settings
 .vscode/
+.vs/
 
 # User-specific files
 *.user
