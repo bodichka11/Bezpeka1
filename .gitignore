@@ -1,0 +1,40 @@
+# .NET build files
+bin/
+obj/
+
+# VS Code settings
+.vscode/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+# User-specific files on Windows
+Thumbs.db
+Desktop.ini
+
+# JetBrains Rider settings
+.idea/
+
+# ASP.NET Core environment files
+appsettings.Development.json
+appsettings.Staging.json
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows Installer files for Web
+*.appx
+*.appxbundle
+*.appxupload
+
+# Npm files
+node_modules/
+
+# .NET Core global tools
+dotnet-tools.json
