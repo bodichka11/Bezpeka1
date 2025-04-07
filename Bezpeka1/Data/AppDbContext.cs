@@ -10,6 +10,8 @@ namespace Bezpeka1.Data
         public DbSet<LoginLogoutLog> LoginLogoutLogs { get; set; }
         public DbSet<OperationLog> OperationLogs { get; set; }
 
+        public DbSet<CaptchaImage> CaptchaImages { get; set; }
+
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

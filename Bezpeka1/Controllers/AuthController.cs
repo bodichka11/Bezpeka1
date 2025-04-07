@@ -33,7 +33,14 @@ namespace Bezpeka1.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody] Models.RegisterRequest request)
         {
-            var success = _userService.RegisterUser(request.Username, request.Password, request.Role);
+            if (request == null || request.Request == null)
+            {
+                return BadRequest("Invalid request payload.");
+            }
+
+            Console.WriteLine($"Received registration request: {request.Request.Username}, {request.Request.Password}, {request.Request.Role}");
+
+            var success = _userService.RegisterUser(request.Request.Username, request.Request.Password, request.Request.Role);
             return success ? Ok() : BadRequest("Registration failed");
         }
 

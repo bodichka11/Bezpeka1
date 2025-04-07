@@ -38,17 +38,18 @@ namespace Bezpeka1.Services
             var user = _context.Users.FirstOrDefault(u => u.Username == username && !u.IsBlocked);
             if (user == null)
             {
-                // Log user not found
                 Console.WriteLine($"User {username} not found or blocked.");
                 return null;
             }
 
             if (!_passwordHasher.Verify(password, user.PasswordHash))
             {
-                // Log password mismatch
                 Console.WriteLine($"Password for user {username} is incorrect.");
                 return null;
             }
+
+            user.LastLogin = DateTime.UtcNow;
+            _context.SaveChanges();
 
             return user;
         }

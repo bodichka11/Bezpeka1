@@ -1,4 +1,5 @@
 ﻿using Bezpeka1.Helpers.Interfaces;
+using System.Globalization;
 
 namespace Bezpeka1.Helpers
 {
@@ -17,8 +18,10 @@ namespace Bezpeka1.Helpers
             if (string.IsNullOrEmpty(password))
                 throw new ArgumentException("Password cannot be null or empty", nameof(password));
 
+            string encrypted = CaesarEncrypt(password, 3);
+
             // Конвертуємо пароль в число, наприклад, за допомогою кодування ASCII або іншої методики
-            double passwordNumeric = password.Sum(c => (int)c);
+            double passwordNumeric = encrypted.Sum(c => (int)c);
 
             double a = 10;  // Додайте значення для a, яке ви хочете використовувати
             double x = passwordNumeric; // Тут використовуємо числове значення пароля
@@ -26,7 +29,7 @@ namespace Bezpeka1.Helpers
             // lg(a/x) - логарифм за основою 10
             double hashedValue = Math.Log10(a / x);
 
-            return hashedValue.ToString();
+            return hashedValue.ToString(CultureInfo.InvariantCulture);
         }
 
         public bool Verify1(string password, string hash)
@@ -45,11 +48,28 @@ namespace Bezpeka1.Helpers
             if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(hash))
                 return false;
 
-            // Генеруємо новий хеш для введеного пароля
             string generatedHash = Hash(password);
 
-            // Порівнюємо збережений хеш із згенерованим хешем
+            // Порівнюємо результат
             return generatedHash == hash;
+        }
+
+        private static string CaesarEncrypt(string input, int shift)
+        {
+            char[] buffer = input.ToCharArray();
+
+            for (int i = 0; i < buffer.Length; i++)
+            {
+                char letter = buffer[i];
+                if (char.IsLetter(letter))
+                {
+                    char d = char.IsUpper(letter) ? 'A' : 'a';
+                    letter = (char)((((letter + shift) - d) % 26 + 26) % 26 + d);
+                    buffer[i] = letter;
+                }
+            }
+
+            return new string(buffer);
         }
     }
 }
